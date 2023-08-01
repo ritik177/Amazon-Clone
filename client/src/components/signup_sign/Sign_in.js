@@ -9,16 +9,17 @@ import { LoginContext } from "../context/ContextProvider";
 const Sign_in = () => {
 
 
+;
+
+  const {account , setAccount} = useContext(LoginContext);
+  
+  const history = useNavigate("");
+
   const [logdata,setData] = useState({
     email:"",
     password:""
   });
-  console.log(logdata);
-
-  const {account , setAccount} = useContext(LoginContext);
-  
-  const history = useNavigate();
-
+  console.log(logdata)
 
 
 const adddata = (e)=>{
@@ -37,6 +38,7 @@ const senddata = async(e)=>{
   e.preventDefault();
   const { email, password } = logdata;
 
+  try{
   const res = await fetch("/login", {
     method: "POST",
     headers: {
@@ -52,20 +54,23 @@ const senddata = async(e)=>{
 
   if (res.status === 400 || !data ){
     console.log("invalid details");
-    toast.warn("Invalid details",{
+    toast.error("Invalid details",{
       position: "top-center"
     })
   }else{
-    console.log("data valid ");
+    // console.log("data valid ");
     setAccount(data);
+    setData ({...logdata , email:"", password:""});
     toast.success("You are successfully login",{
       position: "top-center"
     })
-    setData ({...logdata , email:"", password:""});
+    
     history("/");
   }
-
-
+}
+catch (error) {
+  console.log("login page ka error" + error.message);
+}
 }
 
 
@@ -84,7 +89,7 @@ const senddata = async(e)=>{
                 <input type="text" 
                 onChange={adddata}
                 value={logdata.email}
-                name="email" id="email" />
+                name="email" id="email"  placeholder="enter your email" />
               </div>
               <div className="form_data">
                 <label htmlFor="password">Password</label>
@@ -95,13 +100,17 @@ const senddata = async(e)=>{
               </div>
               <button className="signin_btn" onClick={senddata}>Continue</button>
             </form>
+            <ToastContainer />
           </div>
           <div className="create_accountinfo">
             <p>New To Amazon</p>
+            <button>
+            {" "}
             <NavLink to="/register"><button> Create Your Amazon Account</button></NavLink> 
+            </button>
           </div>
         </div>
-        <ToastContainer />
+        
       </section>
     </>
   );

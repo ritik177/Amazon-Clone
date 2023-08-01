@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink , useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const SIgnUp = () => {
+
+  const history=useNavigate("");
+
   const [udata, setUdata] = useState({
     fname: "",
     email: "",
@@ -12,25 +15,26 @@ const SIgnUp = () => {
     cpassword: ""
   });
 
-  console.log(udata);
+  // console.log(udata);
 
-  // const adddata = (e) => {
-  //   const { name, value } = e.target;
+  const adddata = (e) => {
+    const { name, value } = e.target;
 
-  // setUdata(()=>{
-  //   return{
-  //     ...udata,
-  //     [name]:value
-  //   }
-  // })
-  // }; 
+  setUdata(()=>{
+    return{
+      ...udata,
+      [name]:value
+    }
+  })
+  }; 
 
 const senddata = async (e) => {
   e.preventDefault();
   // console.log(udata);
   const {fname, email, mobile, password, cpassword } = udata;
 
-  const res = await fetch("register", {
+  try {
+  const res = await fetch("/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -45,17 +49,25 @@ const senddata = async (e) => {
   // console.log(data);
   if (res.status === 422 || !data) {
     // alert("Sign Up Failed");
-    toast.warn("Invalid details",{
+    toast.warn("Invalid details 👎!",{
       position: "top-center"
     })
     // window.location.href = "/";
   } else {
     // alert("Sign Up Successful"); 
+    
+    setUdata({...udata, fname:"",email:"",mobile:"",password:"",cpassword:""});
+
     toast.success("Sign Up Successful",{
       position: "top-center"
     })
-    setUdata({...udata, fname:"",email:"",mobile:"",password:"",cpassword:""});
+    history("/login"); 
   }
+}
+
+catch (error) {
+  console.log("front end ka catch error hai" + error.message);
+}
 }
 
 
@@ -68,7 +80,7 @@ const senddata = async (e) => {
           </div>
           <div className="sign_form">
             <form method="POST">
-              <h1>Sign-Up</h1>
+              <h1>Create account</h1>
               <div className="form_data">
                 <label htmlFor="fname">Your Name </label>
                 <input
@@ -92,9 +104,9 @@ const senddata = async (e) => {
                 />
               </div>
               <div className="form_data">
-                <label htmlFor="number">Mobile</label>
+                <label htmlFor="number">Mobile Number</label>
                 <input
-                  type="text"
+                  type="number"
                   // onChange={adddata}
                   onChange={(e)=>setUdata({...udata,mobile:e.target.value})}
                   value={udata.mobile}
@@ -127,9 +139,11 @@ const senddata = async (e) => {
               </div>
               <button className="signin_btn" onClick={senddata}>Continue</button>
 
+              <Divider />
+
               <div className="signin_info">
                 <p>Already have an account?</p>
-                <NavLink to="/login">signin</NavLink>
+                <NavLink to="/login">Sign in</NavLink>
               </div>
             </form>
           </div>
