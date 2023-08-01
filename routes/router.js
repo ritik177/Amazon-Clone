@@ -99,6 +99,14 @@ router.post("/login",async(req,res)=>{
 
         // token generation should be done here  
 
+    
+
+    
+     if(!isMatch){
+        res.status(400).json({error:"invalid   detials"});
+     }
+     else{
+        
         const token  = await userlogin.generateAuthtoken();
         // console.log(token);
 
@@ -107,11 +115,6 @@ router.post("/login",async(req,res)=>{
     httpOnly: true
   })
 
-    
-     if(!isMatch){
-        res.status(400).json({error:"invalid   detials"});
-     }
-     else{
         res.status(200).json(userlogin);
      }
     }else{
