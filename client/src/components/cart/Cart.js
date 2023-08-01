@@ -25,19 +25,20 @@ const Cart = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
-      }
+      },
+      credentials:"include",
     });
     const data = await res.json();
-     console.log(data);
+    //  console.log(data);
 
     if (res.status !== 201) {
       alert("no data available");
     } else {
-      console.log("getdata");
+      // console.log("getdata");
       setIndedata(data);
     }
 
-  }
+  };
 
 
   useEffect(() => {
@@ -56,11 +57,13 @@ const addtocart = async (id)=>{
     body:JSON.stringify({
       inddata
     }),
+    //for sending cookies from frontend to backend for authentication we right credentials include
+
     credentials:"include"
   });
 
   const data1 = await checkres.json();
-  console.log(data1);
+  // console.log(data1);
 
   if(checkres.status === 401 || !data1){
     console.log("user invalid");
